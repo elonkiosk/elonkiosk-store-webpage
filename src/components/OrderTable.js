@@ -1,4 +1,4 @@
-import React, {useEffect, useState} from "react";
+import React, { useEffect, useState } from "react";
 import { getOrderList } from "../util/api/order";
 import { useRecoilState, useRecoilValue } from "recoil";
 import { alertState } from "../atom/alert";
@@ -11,20 +11,22 @@ export default function OrderTable() {
   const [menu, setMenu] = useRecoilState(menuState);
 
   const [mounted, setMounted] = useState(false); // 로딩중 상태 표현
+  console.log(mounted); // 임시 주의제거용
 
   const loginInfo = useRecoilValue(loginState); // 리코일 사용해서
   // 전역상태의 로그인 정보를 가져오기
 
- // 엘럿창
- const [isAlertInitial, setAlert] = useRecoilState(alertState);
- const Toast = Swal.mixin({
-   toast: true,
-   position: "top",
-   showConfirmButton: false,
-   timer: 1000,
-   timerProgressBar: true,
- });
- const MySwal = withReactContent(Toast);
+  // 엘럿창
+  const [isAlertInitial, setAlert] = useRecoilState(alertState);
+  const Toast = Swal.mixin({
+    toast: true,
+    position: "top",
+    showConfirmButton: false,
+    timer: 1000,
+    timerProgressBar: true,
+  });
+
+  const MySwal = withReactContent(Toast);
 
   useEffect(() => {
     // 이거는 로그인 정보가 있는지 확인
@@ -35,7 +37,7 @@ export default function OrderTable() {
       });
     }
   }, [loginInfo, setMenu]);
-
+  /*
 
   useEffect(() => {
     if (isAlertInitial) {
@@ -75,8 +77,7 @@ export default function OrderTable() {
       }, 10000);
     }
   }, [MySwal, isAlertInitial, setAlert, setMenu]);
-
-  const id = ""; // 일단 이렇게 해둠 localStorage를 사용하지 못함
+*/
 
   const acceptMenu = (e) => {
     const p = [...menu].filter((item) => item.number !== e.number);
