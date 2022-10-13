@@ -162,7 +162,7 @@ export default function UpdateForm() {
                 <label> 가격 </label>
               </Td>
               <Td>
-                <StyledInput type="number" />
+                <StyledInput type="number" name="price" />
               </Td>
             </tr>
 
@@ -171,7 +171,7 @@ export default function UpdateForm() {
                 <label> 메뉴 설명 </label>
               </Td>
               <Td>
-                <StyledTextArea type="textarea" />
+                <StyledTextArea type="textarea" name="description" />
               </Td>
             </tr>
 
@@ -183,6 +183,7 @@ export default function UpdateForm() {
                 <StyledFileInput
                   type="file"
                   accept="image/jpeg,image/jpg,image/png"
+                  name="image"
                 />
               </Td>
             </tr>
