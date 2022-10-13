@@ -1,11 +1,26 @@
 import React, { useEffect, useState } from "react";
 import { getOrderList } from "../util/api/order";
 import { useRecoilState, useRecoilValue } from "recoil";
-import { alertState } from "../atom/alert";
+//import { alertState } from "../atom/alert";
 import { menuState } from "../atom/menu";
-import Swal from "sweetalert2";
-import withReactContent from "sweetalert2-react-content";
+//import Swal from "sweetalert2";
+//import withReactContent from "sweetalert2-react-content";
 import { loginState } from "../atom/login";
+import styled from "styled-components";
+
+const StyledTable = styled.table`
+  width: 100%;
+  text-align: center;
+  border-radius: 5px;
+  box-shadow: 10px 10px 10px 0 gray;
+  margin-top: 20px;
+`;
+
+const Tr = styled.tr``;
+
+const Td = styled.td`
+  padding: 10px;
+`;
 
 export default function OrderTable() {
   const [menu, setMenu] = useRecoilState(menuState);
@@ -17,6 +32,7 @@ export default function OrderTable() {
   // 전역상태의 로그인 정보를 가져오기
 
   // 엘럿창
+  /*
   const [isAlertInitial, setAlert] = useRecoilState(alertState);
   const Toast = Swal.mixin({
     toast: true,
@@ -28,6 +44,7 @@ export default function OrderTable() {
 
   const MySwal = withReactContent(Toast);
 
+  */
   useEffect(() => {
     // 이거는 로그인 정보가 있는지 확인
     if (loginInfo.id) {
@@ -49,7 +66,7 @@ export default function OrderTable() {
             time: "2022-08-03 13:34",
             menus: "콰트로치즈X 1, 기네스콰트로치즈와퍼 1",
             price: "7000",
-            status: true,
+            status: True,
           },
         ]);
         setAlert(false);
@@ -66,7 +83,7 @@ export default function OrderTable() {
             time: "2022-08-03 14:11",
             menus: "치즈렐라와퍼 1 , 치즈렐라치킨버거 1, 몬스터X 1",
             price: "10500",
-            status: true,
+            status: True,
           },
         ]);
         setAlert(false);
@@ -99,45 +116,43 @@ export default function OrderTable() {
   };
 
   return (
-    <div className="orderTable">
-      <table>
-        <thead>
-          <tr>
-            <th>주문번호</th>
-            <th>주문시간</th>
-            <th>주문내역</th>
-            <th>결제가격</th>
-            <th>진행상황</th>
-          </tr>
-        </thead>
-        <tbody>
-          {menu.map((item) => (
-            <tr key={item.number}>
-              <td>{item.number}</td>
-              <td>{item.time} </td>
-              <td>{item.menus}</td>
-              <td>{item.price} </td>
-              <td>
-                {item.status ? (
-                  <div key={item.number}>
-                    <button className="accept" onClick={() => acceptMenu(item)}>
-                      주문승인
-                    </button>
-                    <button
-                      className="cancel"
-                      onClick={() => deleteMenu(item.number)}
-                    >
-                      주문거절
-                    </button>
-                  </div>
-                ) : (
-                  "완료"
-                )}
-              </td>
-            </tr>
-          ))}
-        </tbody>
-      </table>
-    </div>
+    <StyledTable>
+      <thead>
+        <Tr>
+          <th>주문번호</th>
+          <th>주문시간</th>
+          <th>주문내역</th>
+          <th>결제가격</th>
+          <th>진행상황</th>
+        </Tr>
+      </thead>
+      <tbody>
+        {menu.map((item) => (
+          <Tr key={item.number}>
+            <Td>{item.number}</Td>
+            <Td>{item.time} </Td>
+            <Td>{item.menus}</Td>
+            <Td>{item.price} </Td>
+            <Td>
+              {item.status ? (
+                <div key={item.number}>
+                  <button className="accept" onClick={() => acceptMenu(item)}>
+                    주문승인
+                  </button>
+                  <button
+                    className="cancel"
+                    onClick={() => deleteMenu(item.number)}
+                  >
+                    주문거절
+                  </button>
+                </div>
+              ) : (
+                "완료"
+              )}
+            </Td>
+          </Tr>
+        ))}
+      </tbody>
+    </StyledTable>
   );
 }
