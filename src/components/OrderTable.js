@@ -2,10 +2,10 @@ import React, { useEffect, useState } from "react";
 import { getOrderList } from "../util/api/order";
 import { useRecoilState, useRecoilValue } from "recoil";
 //import { alertState } from "../atom/alert";
+import { loginState } from "../atom/login";
 import { menuState } from "../atom/menu";
 //import Swal from "sweetalert2";
 //import withReactContent from "sweetalert2-react-content";
-import { loginState } from "../atom/login";
 import styled from "styled-components";
 
 const StyledTable = styled.table`
@@ -52,10 +52,12 @@ export default function OrderTable() {
         setMenu(data); // 이걸로 렌더링 데이터 지정
         setMounted(true);
       });
+    } else {
     }
   }, [loginInfo, setMenu]);
-  /*
 
+  useEffect(() => {}, [loginInfo]);
+  /*
   useEffect(() => {
     if (isAlertInitial) {
       setTimeout(() => {
