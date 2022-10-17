@@ -1,5 +1,6 @@
 import styled from "styled-components";
 import React from "react";
+import { Link } from "react-router-dom";
 
 const Box = styled.div`
   display: flex;
@@ -34,21 +35,30 @@ const CardBtnWrap = styled.div`
   margin-right: 20px;
 `;
 
-const UpdateBtn = styled.button`
+const StyledLinkUpdate = styled(Link)`
   height: 50px;
   width: 200px;
   background-color: rgb(149, 234, 204);
   color: black;
   border-radius: 4px;
-  align-items: center;
   font-size: 70%;
   font-weight: 600;
   margin-bottom: 20px;
   border: none;
-
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  text-align: center;
   &:hover {
     background-color: rgb(149, 215, 204);
     cursor: pointer;
+  }
+
+  &:focus,
+  &:visited,
+  &:link,
+  &:active {
+    text-decoration: none;
   }
 `;
 
@@ -93,7 +103,9 @@ export default function MenuCard(props) {
         </StyledText>
       </DescriptionBox>
       <CardBtnWrap>
-        <UpdateBtn>메뉴 수정</UpdateBtn>
+        <StyledLinkUpdate to="/updateform">
+          <div>메뉴 수정</div>
+        </StyledLinkUpdate>
         <DelBtn>메뉴 삭제</DelBtn>
       </CardBtnWrap>
     </Box>

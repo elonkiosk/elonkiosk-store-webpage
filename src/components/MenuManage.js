@@ -24,19 +24,6 @@ export default function MenuManage() {
     }
   }, [loginInfo, setMenu]);
 
-  useEffect(() => {
-    setMenu((prev) => [
-      ...prev,
-      {
-        number: "4",
-        time: "2022-08-03 13:34",
-        menus: "콰트로치즈X 1, 기네스콰트로치즈와퍼 1",
-        price: "7000",
-        status: true,
-      },
-    ]);
-  }, [setMenu]);
-
   return (
     <>
       <AddButton />
