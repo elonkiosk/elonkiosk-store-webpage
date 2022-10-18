@@ -1,8 +1,9 @@
-import React, { useEffect } from "react";
-import { useRecoilValue } from "recoil";
+import React, { useState } from "react";
 import styled from "styled-components";
-import { loginState } from "../atom/login";
 import { Link } from "react-router-dom";
+import { useRecoilState } from "recoil";
+import { loginState } from "../atom/login";
+import { getLoginStatus } from "../util/api/login";
 
 const StyledTitle = styled.h2`
   margin-top: 20px;
@@ -10,7 +11,7 @@ const StyledTitle = styled.h2`
   text-align: center;
 `;
 
-const StyledForm = styled.form`
+const StyledForm = styled.div`
   font-size: 1.2rem;
   font-weight: bold;
   position: absolute;
@@ -55,7 +56,7 @@ const BtnWrapper = styled.div`
 const StyledSubmit = styled.input`
   height: 50px;
   width: 200px;
-  background-color: rgb(149, 234, 204);
+  background-color: #a7dee8; /*#70adb8;*/ /*#77b854;*/ /*rgb(149, 234, 204);*/
   color: black;
   border-radius: 4px;
   align-items: center;
@@ -64,7 +65,7 @@ const StyledSubmit = styled.input`
   border: none;
 
   &:hover {
-    background-color: rgb(149, 215, 204);
+    background-color: #82adb5;
     cursor: pointer;
   }
 `;
@@ -72,8 +73,8 @@ const StyledSubmit = styled.input`
 const DelBtn = styled.button`
   height: 50px;
   width: 200px;
-  background-color: rgb(226, 71, 88);
-  color: white;
+  background-color: #2895a8; /*#2b822d; */ /*rgb(226, 71, 88);*/
+  color: black;
   border-radius: 4px;
   align-items: center;
   font-size: 70%;
@@ -82,42 +83,42 @@ const DelBtn = styled.button`
   border: none;
 
   &:hover {
-    background-color: rgb(193, 71, 88);
+    background-color: #217e8f;
     cursor: pointer;
   }
 `;
 
-export default function LoginForm() {
-  const loginInfo = useRecoilValue(loginState); // 리코일 사용해서
-  // 전역상태의 로그인 정보를 가져오기
-  console.log(loginInfo);
-  useEffect(() => {
-    if (loginInfo.id) {
-    }
-  }, [loginInfo]);
+const StyledLink = styled(Link)`
+  text-decoration: none;
+  color: black;
 
-  const StyledLink = styled(Link)`
+  &:focus,
+  &:visited,
+  &:link,
+  &:active {
     text-decoration: none;
-    color: black;
+  }
+`;
 
-    &:focus,
-    &:visited,
-    &:link,
-    &:active {
-      text-decoration: none;
+export default function LoginForm() {
+  const [userId, setUserId] = useState("");
+  const [userPw, setPassword] = useState("");
+
+  const [loginInfo, setLoginInfo] = useRecoilState(loginState); // 리코일 사용해서
+  console.log(loginInfo);
+
+  async function submit() {
+    const data = await getLoginStatus(userId, userPw);
+    if (data) {
+      setLoginInfo(userId);
+      console.log(loginInfo);
     }
-  `;
-
-  /*
-    onSubmit={(e) => {
-          e.preventDefault();
-        }}
-*/
+  }
 
   return (
-    <StyledForm method="post" action="">
+    <StyledForm>
       <StyledTitle>로그인</StyledTitle>
-      <input type="hidden" name="signin" value="" />
+      {/*<input type="hidden" name="signin" value="" />*/}
       <StyledTable>
         <tbody>
           <tr>
@@ -125,7 +126,11 @@ export default function LoginForm() {
               <label> 아이디 </label>
             </Td>
             <Td>
-              <StyledInput type="text" />
+              <StyledInput
+                type="text"
+                value={userId}
+                onChange={(e) => setUserId(e.target.value)}
+              />
             </Td>
           </tr>
           <tr>
@@ -133,7 +138,11 @@ export default function LoginForm() {
               <label> 비밀번호 </label>
             </Td>
             <Td>
-              <StyledInput type="password" />
+              <StyledInput
+                type="password"
+                value={userPw}
+                onChange={(e) => setPassword(e.target.value)}
+              />
             </Td>
           </tr>
         </tbody>
@@ -142,7 +151,7 @@ export default function LoginForm() {
       <hr />
 
       <BtnWrapper>
-        <StyledSubmit type="submit" value="로그인" />
+        <StyledSubmit type="button" onClick={submit} value="로그인" />
         <StyledLink to="/signup">
           <DelBtn>회원가입</DelBtn>
         </StyledLink>

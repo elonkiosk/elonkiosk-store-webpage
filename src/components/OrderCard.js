@@ -37,7 +37,7 @@ const CardBtnWrap = styled.div`
 const UpdateBtn = styled.button`
   height: 50px;
   width: 200px;
-  background-color: rgb(149, 234, 204);
+  background-color: #ff6666; /*rgb(149, 234, 204); */
   color: black;
   border-radius: 4px;
   align-items: center;
@@ -78,13 +78,13 @@ export default function OrderCard(props) {
   const orderinfo = props.orderinfo;
   return (
     <Box>
-      <StyledImg
-        src="img/coffee.jpg"
-        width="100px"
-        height="100px"
-        alt="testA"
-      />
       <DescriptionBox>
+        <StyledImg
+          src="img/coffee.jpg"
+          width="100px"
+          height="100px"
+          alt="testA"
+        />
         <StyledText>{orderinfo.number}</StyledText>
         <StyledText>{orderinfo.time}</StyledText>
         <StyledText>{orderinfo.price}원</StyledText>

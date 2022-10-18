@@ -67,7 +67,7 @@ const BtnWrapper = styled.div`
 const StyledSubmit = styled.input`
   height: 50px;
   width: 200px;
-  background-color: rgb(149, 234, 204);
+  background-color: #a7dee8;
   color: black;
   border-radius: 4px;
   align-items: center;
@@ -76,7 +76,7 @@ const StyledSubmit = styled.input`
   border: none;
 
   &:hover {
-    background-color: rgb(149, 215, 204);
+    background-color: #82adb5;
     cursor: pointer;
   }
 `;
@@ -84,8 +84,8 @@ const StyledSubmit = styled.input`
 const DelBtn = styled.button`
   height: 50px;
   width: 200px;
-  background-color: rgb(226, 71, 88);
-  color: white;
+  background-color: #2895a8;
+  color: black;
   border-radius: 4px;
   align-items: center;
   font-size: 70%;
@@ -94,7 +94,7 @@ const DelBtn = styled.button`
   border: none;
 
   &:hover {
-    background-color: rgb(193, 71, 88);
+    background-color: #82adb5;
     cursor: pointer;
   }
 `;

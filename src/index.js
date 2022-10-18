@@ -39,6 +39,7 @@ root.render(
           path="/updateform"
           element={token ? <UpdateForm /> : <LoginForm />}
         ></Route>
+        <Route path="/login" element={<LoginForm />}></Route>
         <Route path="/" element={<LoginForm />}></Route>
       </Routes>
     </BrowserRouter>
