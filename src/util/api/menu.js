@@ -2,7 +2,9 @@ import client from "../client";
 
 // R
 export const getMenuList = async (id) => {
-  const { data } = await client.get(`/menu/${id}`);
+  const data = await client
+    .get(`/api/menu/${id}`)
+    .then((response) => JSON.parse(response));
   return data;
 };
 

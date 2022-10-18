@@ -1,7 +1,10 @@
-import client from '../client';
+import client from "../client";
 
 export const getOrderList = async (id) => {
-	const { data } = await client.get(`/order/${id}`);
+  const data = await client
+    .get(`/api/order/store/${id}`)
+    .then((response) => JSON.parse(response));
 
-	return data;
+  console.log(data);
+  return data;
 };

@@ -1,7 +1,7 @@
 import { Link } from "react-router-dom";
 import styled from "styled-components";
 import React, { useEffect } from "react";
-import { useRecoilValue } from "recoil";
+import { useRecoilState } from "recoil";
 import { loginState } from "../atom/login";
 
 const NavWrapper = styled.div`
@@ -59,11 +59,15 @@ const StyledLink = styled(Link)`
 `;
 
 export default function NavBar() {
-  const loginInfo = useRecoilValue(loginState); // 리코일 사용해서
+  const [loginInfo, setLoginInfo] = useRecoilState(loginState);
   // 전역상태의 로그인 정보를 가져오기
   console.log(loginInfo);
   useEffect(() => {});
   // 이거는 로그인 정보가 있는지 확인
+
+  const logout = () => {
+    setLoginInfo("");
+  };
 
   return (
     <NavWrapper>
@@ -72,11 +76,11 @@ export default function NavBar() {
         <Ul>
           <Li className="userinfo">
             {loginInfo.id ? (
-              <StyledLink to="/">
+              <StyledLink to="/login" onClick={logout}>
                 <div>로그아웃</div>
               </StyledLink>
             ) : (
-              <StyledLink to="/">
+              <StyledLink to="/login">
                 <div>로그인</div>
               </StyledLink>
             )}

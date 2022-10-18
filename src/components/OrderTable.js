@@ -1,12 +1,13 @@
 import React, { useEffect, useState } from "react";
 import { getOrderList } from "../util/api/order";
 import { useRecoilState, useRecoilValue } from "recoil";
-//import { alertState } from "../atom/alert";
 import { loginState } from "../atom/login";
 import { menuState } from "../atom/menu";
-//import Swal from "sweetalert2";
-//import withReactContent from "sweetalert2-react-content";
+import { alertState } from "../atom/alert";
+import Swal from "sweetalert2";
+import withReactContent from "sweetalert2-react-content";
 import styled from "styled-components";
+import { Navigate } from "react-router-dom";
 
 const StyledTable = styled.table`
   width: 100%;
@@ -32,7 +33,6 @@ export default function OrderTable() {
   // 전역상태의 로그인 정보를 가져오기
 
   // 엘럿창
-  /*
   const [isAlertInitial, setAlert] = useRecoilState(alertState);
   const Toast = Swal.mixin({
     toast: true,
@@ -44,7 +44,6 @@ export default function OrderTable() {
 
   const MySwal = withReactContent(Toast);
 
-  */
   useEffect(() => {
     // 이거는 로그인 정보가 있는지 확인
     if (loginInfo.id) {
@@ -53,50 +52,13 @@ export default function OrderTable() {
         setMounted(true);
       });
     } else {
+      setAlert(false);
+      MySwal.fire({
+        icon: "error",
+        title: "로그인이 필요한 서비스 입니다.",
+      });
     }
-  }, [loginInfo, setMenu]);
-
-  useEffect(() => {}, [loginInfo]);
-  /*
-  useEffect(() => {
-    if (isAlertInitial) {
-      setTimeout(() => {
-        setMenu((prev) => [
-          ...prev,
-          {
-            number: "4",
-            time: "2022-08-03 13:34",
-            menus: "콰트로치즈X 1, 기네스콰트로치즈와퍼 1",
-            price: "7000",
-            status: True,
-          },
-        ]);
-        setAlert(false);
-        MySwal.fire({
-          icon: "success",
-          title: "주문이 추가되었습니다.",
-        });
-      }, 5000);
-      setTimeout(() => {
-        setMenu((prev) => [
-          ...prev,
-          {
-            number: "5",
-            time: "2022-08-03 14:11",
-            menus: "치즈렐라와퍼 1 , 치즈렐라치킨버거 1, 몬스터X 1",
-            price: "10500",
-            status: True,
-          },
-        ]);
-        setAlert(false);
-        MySwal.fire({
-          icon: "success",
-          title: "주문이 추가되었습니다.",
-        });
-      }, 10000);
-    }
-  }, [MySwal, isAlertInitial, setAlert, setMenu]);
-*/
+  }, [MySwal, isAlertInitial, setAlert, loginInfo, setMenu]);
 
   const acceptMenu = (e) => {
     const p = [...menu].filter((item) => item.number !== e.number);
@@ -117,7 +79,7 @@ export default function OrderTable() {
     setMenu((prev) => [...prev].filter((e) => number !== e.number));
   };
 
-  return (
+  return loginInfo.id ? (
     <StyledTable>
       <thead>
         <Tr>
@@ -156,5 +118,7 @@ export default function OrderTable() {
         ))}
       </tbody>
     </StyledTable>
+  ) : (
+    <Navigate to="/login" />
   );
 }
