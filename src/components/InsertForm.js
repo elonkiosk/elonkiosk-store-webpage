@@ -145,7 +145,7 @@ export default function InsertForm() {
 
     axios({
       method: "post",
-      url: "http://localhost:3000/api/menu",
+      url: "https://qr-ufo.com/api/menu",
       data: formData,
       headers: {
         "Content-Type": "multipart/form-data",

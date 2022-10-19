@@ -116,7 +116,7 @@ export default function UpdateForm() {
   const handleSubmit = (e) => {
     e.preventDefault();
 
-    axios.patch(`http://localhost:3000/api/menu/${num}`, {
+    axios.patch(`https://qr-ufo.com/api/menu/${num}`, {
       name: name,
       price: price,
       explanation: explanation,
