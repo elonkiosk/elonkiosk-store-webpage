@@ -3,7 +3,9 @@ import styled from "styled-components";
 import { Link } from "react-router-dom";
 import { useRecoilState } from "recoil";
 import { loginState } from "../atom/login";
-import { getLoginStatus } from "../util/api/login";
+import { storeState } from "../atom/store";
+import { getLoginStatus, getStoreId } from "../util/api/login";
+import { useNavigate } from "react-router-dom";
 
 const StyledTitle = styled.h2`
   margin-top: 20px;
@@ -105,13 +107,20 @@ export default function LoginForm() {
   const [userPw, setPassword] = useState("");
 
   const [loginInfo, setLoginInfo] = useRecoilState(loginState); // 리코일 사용해서
-  console.log(loginInfo);
+  const [storeInfo, setStoreInfo] = useRecoilState(storeState); // 리코일 사용해서
+
+  const navigate = useNavigate();
 
   async function submit() {
     const data = await getLoginStatus(userId, userPw);
     if (data) {
       setLoginInfo(userId);
-      console.log(loginInfo);
+      const storeId = await getStoreId(userId);
+      setStoreInfo(storeId);
+      localStorage.setItem("userId", userId);
+      localStorage.setItem("storeId", storeId);
+      console.log(loginInfo, storeInfo);
+      navigate(`/orderlist`);
     }
   }
 

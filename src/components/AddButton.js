@@ -44,9 +44,9 @@ const Button = styled.button`
 export default function AddButton() {
   return (
     <ButtonWrap>
-      <Button>
-        <StyledLink to="/menuform">&#43;</StyledLink>
-      </Button>
+      <StyledLink to="/menuform">
+        <Button>&#43;</Button>
+      </StyledLink>
     </ButtonWrap>
   );
 }

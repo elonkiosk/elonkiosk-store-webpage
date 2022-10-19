@@ -16,7 +16,7 @@ const token = getLoginStatus();
 
 const root = ReactDOM.createRoot(document.getElementById("root"));
 
-//component={token ? Dashboard : Login}
+// component={token ? Dashboard : Login}
 
 root.render(
   <RecoilRoot>

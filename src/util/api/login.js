@@ -5,6 +5,10 @@ export const getLoginStatus = async (id, pw) => {
     id: id,
     password: pw,
   });
-  console.log(data);
-  return true;
+  return data;
+};
+
+export const getStoreId = async (userId) => {
+  const { data } = await client.get(`/api/manager/${userId}/store`);
+  return data;
 };
