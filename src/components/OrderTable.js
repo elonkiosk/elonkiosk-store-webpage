@@ -1,7 +1,8 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect } from "react";
 import { getOrderList } from "../util/api/order";
 import { useRecoilState, useRecoilValue } from "recoil";
 import { loginState } from "../atom/login";
+import { storeState } from "../atom/store";
 import { menuState } from "../atom/menu";
 import { alertState } from "../atom/alert";
 import Swal from "sweetalert2";
@@ -26,10 +27,11 @@ const Td = styled.td`
 export default function OrderTable() {
   const [menu, setMenu] = useRecoilState(menuState);
 
-  const [mounted, setMounted] = useState(false); // 로딩중 상태 표현
-  console.log(mounted); // 임시 주의제거용
+  //const [mounted, setMounted] = useState(false); // 로딩중 상태 표현
 
-  const loginInfo = useRecoilValue(loginState); // 리코일 사용해서
+  const loginInfo = useRecoilValue(loginState);
+  const storeInfo = useRecoilValue(storeState);
+  // 리코일 사용해서
   // 전역상태의 로그인 정보를 가져오기
 
   // 엘럿창
@@ -45,20 +47,23 @@ export default function OrderTable() {
   const MySwal = withReactContent(Toast);
 
   useEffect(() => {
-    // 이거는 로그인 정보가 있는지 확인
-    if (loginInfo.id) {
-      getOrderList(loginInfo.id).then((data) => {
-        setMenu(data); // 이걸로 렌더링 데이터 지정
-        setMounted(true);
-      });
-    } else {
-      setAlert(false);
-      MySwal.fire({
-        icon: "error",
-        title: "로그인이 필요한 서비스 입니다.",
-      });
+    async function fetch() {
+      const userInfo = localStorage.getItem("userId");
+      const storeInfo = localStorage.getItem("storeId");
+      if (userInfo && storeInfo) {
+        const response = await getOrderList(storeInfo);
+        setMenu(response.data);
+      } else {
+        setAlert(false);
+        MySwal.fire({
+          icon: "error",
+          title: "로그인이 필요한 서비스 입니다.",
+        });
+      }
     }
-  }, [MySwal, isAlertInitial, setAlert, loginInfo, setMenu]);
+
+    fetch();
+  }, [MySwal, storeInfo, menu, isAlertInitial, setAlert, loginInfo, setMenu]);
 
   const acceptMenu = (e) => {
     const p = [...menu].filter((item) => item.number !== e.number);
@@ -79,7 +84,7 @@ export default function OrderTable() {
     setMenu((prev) => [...prev].filter((e) => number !== e.number));
   };
 
-  return loginInfo.id ? (
+  return loginInfo ? (
     <StyledTable>
       <thead>
         <Tr>

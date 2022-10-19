@@ -1,8 +1,9 @@
-import React, { useEffect } from "react";
-import { useRecoilValue } from "recoil";
+import React, { useState } from "react";
+//import { useRecoilValue } from "recoil";
 import styled from "styled-components";
-import { loginState } from "../atom/login";
+//import { loginState } from "../atom/login";
 import { Link } from "react-router-dom";
+import axios from "axios";
 
 const StyledTitle = styled.h2`
   margin-top: 20px;
@@ -102,37 +103,66 @@ const DelBtn = styled.button`
   }
 `;
 
-export default function InsertForm() {
-  const loginInfo = useRecoilValue(loginState); // 리코일 사용해서
-  // 전역상태의 로그인 정보를 가져오기
-  console.log(loginInfo);
-  useEffect(() => {
-    if (loginInfo.id) {
-    }
-  }, [loginInfo]);
+const StyledLink = styled(Link)`
+  text-decoration: none;
+  color: black;
 
-  const StyledLink = styled(Link)`
+  &:focus,
+  &:visited,
+  &:link,
+  &:active {
     text-decoration: none;
-    color: black;
+  }
+`;
+export default function InsertForm() {
+  const [files, setFiles] = useState();
+  const [name, setName] = useState("");
+  const [category, setCategory] = useState("");
+  const [price, setPrice] = useState(0);
+  const [explanation, setExplanation] = useState("");
 
-    &:focus,
-    &:visited,
-    &:link,
-    &:active {
-      text-decoration: none;
-    }
-  `;
+  const storeId = localStorage.getItem("storeId");
 
-  /*
-    onSubmit={(e) => {
-          e.preventDefault();
-        }}
-*/
+  const handleSubmit = (e) => {
+    console.log(files);
+    e.preventDefault();
+
+    const formData = new FormData();
+
+    const bodyObj = {
+      name: name,
+      category: category,
+      price: price,
+      explanation: explanation,
+    };
+
+    formData.append("body", JSON.stringify(bodyObj));
+    formData.append("file", files);
+    console.log(files);
+
+    axios({
+      method: "post",
+      url: "http://localhost:3000/api/menu",
+      data: formData,
+      headers: {
+        "Content-Type": "multipart/form-data",
+      },
+    });
+
+    setFiles(null);
+  };
+
+  const handleUpload = (e) => {
+    e.preventDefault();
+    const file = e.target.files[0];
+    console.log(e.target.files[0]);
+    setFiles(file);
+  };
 
   return (
-    <StyledForm method="post" action="">
+    <StyledForm onSubmit={handleSubmit}>
       <StyledTitle>메뉴 추가하기</StyledTitle>
-      <input type="hidden" name="store_id" value="" />
+      <input type="hidden" name="store" value={storeId} />
       <StyledTable>
         <tbody>
           <tr>
@@ -140,7 +170,11 @@ export default function InsertForm() {
               <label> 메뉴 이름 </label>
             </Td>
             <Td>
-              <StyledInput type="text" />
+              <StyledInput
+                type="text"
+                name="name"
+                onChange={(e) => setName(e.target.value)}
+              />
             </Td>
           </tr>
 
@@ -152,17 +186,38 @@ export default function InsertForm() {
             <Td>
               <CategoryWrapper>
                 <label> 커피 </label>
-                <StyledCategory type="radio" name="category" value="커피" />
-
+                <StyledCategory
+                  type="radio"
+                  name="category"
+                  value="커피"
+                  onChange={(e) => {
+                    if (e.target.checked) {
+                      setCategory("커피");
+                    }
+                  }}
+                />
                 <label> 음료 </label>
                 <StyledCategory
                   type="radio"
                   name="category"
-                  value="일반 음료"
+                  value="일반음료"
+                  onChange={(e) => {
+                    if (e.target.checked) {
+                      setCategory("일반음료");
+                    }
+                  }}
                 />
-
                 <label> 빵 </label>
-                <StyledCategory type="radio" name="category" value="빵" />
+                <StyledCategory
+                  type="radio"
+                  name="category"
+                  value="빵"
+                  onChange={(e) => {
+                    if (e.target.checked) {
+                      setCategory("빵");
+                    }
+                  }}
+                />
               </CategoryWrapper>
             </Td>
           </tr>
@@ -172,7 +227,11 @@ export default function InsertForm() {
               <label> 가격 </label>
             </Td>
             <Td>
-              <StyledInput type="number" />
+              <StyledInput
+                type="number"
+                name="price"
+                onChange={(e) => setPrice(e.target.value)}
+              />
             </Td>
           </tr>
 
@@ -181,7 +240,11 @@ export default function InsertForm() {
               <label> 메뉴 설명 </label>
             </Td>
             <Td>
-              <StyledTextArea type="textarea" />
+              <StyledTextArea
+                type="textarea"
+                name="explanation"
+                onChange={(e) => setExplanation(e.target.value)}
+              />
             </Td>
           </tr>
 
@@ -193,6 +256,8 @@ export default function InsertForm() {
               <StyledFileInput
                 type="file"
                 accept="image/jpeg,image/jpg,image/png"
+                name="file"
+                onChange={handleUpload}
               />
             </Td>
           </tr>

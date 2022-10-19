@@ -1,8 +1,9 @@
 import { Link } from "react-router-dom";
 import styled from "styled-components";
-import React, { useEffect } from "react";
+import React from "react";
 import { useRecoilState } from "recoil";
 import { loginState } from "../atom/login";
+import { storeState } from "../atom/store";
 
 const NavWrapper = styled.div`
   display: flex;
@@ -59,14 +60,19 @@ const StyledLink = styled(Link)`
 `;
 
 export default function NavBar() {
-  const [loginInfo, setLoginInfo] = useRecoilState(loginState);
+  const [, setLoginInfo] = useRecoilState(loginState);
+  const [, setStoreInfo] = useRecoilState(storeState);
   // 전역상태의 로그인 정보를 가져오기
-  console.log(loginInfo);
-  useEffect(() => {});
+  //console.log(loginInfo);
   // 이거는 로그인 정보가 있는지 확인
+
+  const loginInfo = localStorage.getItem("userId");
 
   const logout = () => {
     setLoginInfo("");
+    setStoreInfo("");
+    localStorage.removeItem("userId");
+    localStorage.removeItem("storeId");
   };
 
   return (
@@ -75,7 +81,7 @@ export default function NavBar() {
       <Nav>
         <Ul>
           <Li className="userinfo">
-            {loginInfo.id ? (
+            {loginInfo ? (
               <StyledLink to="/login" onClick={logout}>
                 <div>로그아웃</div>
               </StyledLink>
