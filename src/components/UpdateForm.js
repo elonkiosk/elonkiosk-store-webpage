@@ -1,6 +1,9 @@
-import React from "react";
+import React, { useState } from "react";
 import styled from "styled-components";
 import { Link } from "react-router-dom";
+//import { getMenu } from "../util/api/menu";
+import { useNavigate } from "react-router-dom";
+import axios from "axios";
 
 const StyledTitle = styled.h2`
   margin-top: 20px;
@@ -26,11 +29,6 @@ const StyledInput = styled.input`
   border-bottom: 1px solid gray;
 `;
 
-const StyledFileInput = styled.input`
-  width: 60%;
-  border: none;
-`;
-
 const StyledTextArea = styled.input`
   width: 60%;
   height: 200px;
@@ -45,14 +43,6 @@ const StyledTable = styled.table`
 const Td = styled.td`
   text-align: center;
   padding: 10px;
-`;
-
-const CategoryWrapper = styled.div`
-  height: 50px;
-`;
-
-const StyledCategory = styled.input`
-  margin-top: 20px;
 `;
 
 const BtnWrapper = styled.div`
@@ -99,30 +89,46 @@ const DelBtn = styled.button`
   }
 `;
 
-export default function UpdateForm() {
-  const StyledLink = styled(Link)`
+const StyledLink = styled(Link)`
+  text-decoration: none;
+  color: black;
+
+  &:focus,
+  &:visited,
+  &:link,
+  &:active {
     text-decoration: none;
-    color: black;
+  }
+`;
 
-    &:focus,
-    &:visited,
-    &:link,
-    &:active {
-      text-decoration: none;
-    }
-  `;
+export default function UpdateForm() {
+  const [name, setName] = useState(localStorage.getItem("menuName"));
+  const [price, setPrice] = useState(localStorage.getItem("menuPrice"));
+  const [explanation, setExplanation] = useState(
+    localStorage.getItem("menuExplanation")
+  );
 
-  /*
-    onSubmit={(e) => {
-          e.preventDefault();
-        }}
-*/
+  const num = localStorage.getItem("curNum");
+  //const storeInfo = localStorage.getItem("storeId");
+
+  const navigate = useNavigate();
+
+  const handleSubmit = (e) => {
+    e.preventDefault();
+
+    axios.patch(`http://localhost:3000/api/menu/${num}`, {
+      name: name,
+      price: price,
+      explanation: explanation,
+    });
+
+    navigate(`/menulist`);
+  };
 
   return (
     <>
-      <StyledForm method="post" action="">
-        <StyledTitle>메뉴 추가하기</StyledTitle>
-        <input type="hidden" name="store_id" value="" />
+      <StyledForm onSubmit={handleSubmit}>
+        <StyledTitle>메뉴 수정하기</StyledTitle>
         <StyledTable>
           <tbody>
             <tr>
@@ -130,30 +136,12 @@ export default function UpdateForm() {
                 <label> 메뉴 이름 </label>
               </Td>
               <Td>
-                <StyledInput type="text" />
-              </Td>
-            </tr>
-
-            <tr>
-              <Td>
-                <label> 카테고리 </label>
-              </Td>
-
-              <Td>
-                <CategoryWrapper>
-                  <label> 커피 </label>
-                  <StyledCategory type="radio" name="category" value="커피" />
-
-                  <label> 음료 </label>
-                  <StyledCategory
-                    type="radio"
-                    name="category"
-                    value="일반 음료"
-                  />
-
-                  <label> 빵 </label>
-                  <StyledCategory type="radio" name="category" value="빵" />
-                </CategoryWrapper>
+                <StyledInput
+                  type="text"
+                  name="name"
+                  value={name}
+                  onChange={(e) => setName(e.target.value)}
+                />
               </Td>
             </tr>
 
@@ -162,7 +150,12 @@ export default function UpdateForm() {
                 <label> 가격 </label>
               </Td>
               <Td>
-                <StyledInput type="number" name="price" />
+                <StyledInput
+                  type="number"
+                  name="price"
+                  value={price}
+                  onChange={(e) => setPrice(e.target.value)}
+                />
               </Td>
             </tr>
 
@@ -171,19 +164,13 @@ export default function UpdateForm() {
                 <label> 메뉴 설명 </label>
               </Td>
               <Td>
-                <StyledTextArea type="textarea" name="description" />
-              </Td>
-            </tr>
-
-            <tr>
-              <Td>
-                <label> 메뉴 이미지 </label>
-              </Td>
-              <Td>
-                <StyledFileInput
-                  type="file"
-                  accept="image/jpeg,image/jpg,image/png"
-                  name="image"
+                <StyledTextArea
+                  type="textarea"
+                  name="description"
+                  value={explanation}
+                  onChange={(e) => {
+                    setExplanation(e.target.value);
+                  }}
                 />
               </Td>
             </tr>
@@ -193,7 +180,7 @@ export default function UpdateForm() {
         <hr />
 
         <BtnWrapper>
-          <StyledSubmit type="submit" value="메뉴 추가하기" />
+          <StyledSubmit type="submit" value="메뉴 수정하기" />
           <StyledLink to="/menulist">
             <DelBtn>나가기</DelBtn>
           </StyledLink>

@@ -1,6 +1,7 @@
 import styled from "styled-components";
 import React from "react";
 import { Link } from "react-router-dom";
+import { deleteMenu } from "../util/api/menu";
 
 const Box = styled.div`
   display: flex;
@@ -88,25 +89,27 @@ export default function MenuCard(props) {
   const menuinfo = props.menuinfo;
   return (
     <Box>
-      <StyledImg
-        src="img/coffee.jpg"
-        width="100px"
-        height="100px"
-        alt="testA"
-      />
+      <StyledImg src={menuinfo.pic} width="100px" height="100px" alt="testA" />
       <DescriptionBox>
-        <StyledText>{menuinfo.menus}</StyledText>
+        <StyledText>{menuinfo.number}번 메뉴</StyledText>
+        <StyledText>{menuinfo.name}</StyledText>
         <StyledText>{menuinfo.price}원</StyledText>
-        <StyledText>
-          {/*menuinfo.decription - 추가 예정*/} 햄버거 햄버거 햄버거 입니다.
-          아마도 말이죠.
-        </StyledText>
+        <StyledText>{menuinfo.category}</StyledText>
+        <StyledText>{menuinfo.explanation}</StyledText>
       </DescriptionBox>
       <CardBtnWrap>
-        <StyledLinkUpdate to="/updateform">
+        <StyledLinkUpdate
+          to="/updateform"
+          onClick={() => {
+            localStorage.setItem("curNum", menuinfo.number);
+            localStorage.setItem("menuName", menuinfo.name);
+            localStorage.setItem("menuPrice", menuinfo.price);
+            localStorage.setItem("menuExplanation", menuinfo.explanation);
+          }}
+        >
           <div>메뉴 수정</div>
         </StyledLinkUpdate>
-        <DelBtn>메뉴 삭제</DelBtn>
+        <DelBtn onClick={(e) => deleteMenu(menuinfo.number)}>메뉴 삭제</DelBtn>
       </CardBtnWrap>
     </Box>
   );

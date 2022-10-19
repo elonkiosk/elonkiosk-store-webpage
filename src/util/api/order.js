@@ -6,3 +6,15 @@ export const getOrderList = async (id) => {
     .then((response) => response);
   return data;
 };
+
+export const acceptOrder = async (itemNum) => {
+  await client.patch(`/api/order/${itemNum}`, {
+    status: "complete",
+  });
+};
+
+export const deleteOrder = async (itemNum) => {
+  await client.patch(`/api/order/${itemNum}`, {
+    status: "denied",
+  });
+};

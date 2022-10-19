@@ -5,7 +5,7 @@ import { loginState } from "../atom/login";
 import MenuCard from "./MenuCard";
 //import { menuState } from "../atom/menu";
 import AddButton from "./AddButton";
-import { Navigate } from "react-router-dom";
+import { Navigate, useNavigate } from "react-router-dom";
 import { alertState } from "../atom/alert";
 import Swal from "sweetalert2";
 import withReactContent from "sweetalert2-react-content";
@@ -27,7 +27,7 @@ export default function MenuManage() {
   });
 
   const MySwal = withReactContent(Toast);
-
+  const navigate = useNavigate();
   useEffect(() => {
     async function fetch() {
       const userInfo = localStorage.getItem("userId");
@@ -41,11 +41,12 @@ export default function MenuManage() {
           icon: "error",
           title: "로그인이 필요한 서비스 입니다.",
         });
+        navigate(`/login`);
       }
     }
 
     fetch();
-  }, [MySwal, menu, isAlertInitial, setAlert, loginInfo, setMenu]);
+  }, [MySwal, menu, navigate, isAlertInitial, setAlert, loginInfo, setMenu]);
 
   return loginInfo ? (
     <>

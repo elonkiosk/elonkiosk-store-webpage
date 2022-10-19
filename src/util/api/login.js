@@ -8,7 +8,7 @@ export const getLoginStatus = async (id, pw) => {
   return data;
 };
 
-export const getStoreId = async (storeId) => {
-  const { data } = await client.get(`/api/manager/${storeId}/store`);
+export const getStoreId = async (userId) => {
+  const { data } = await client.get(`/api/manager/${userId}/store`);
   return data;
 };

@@ -2,13 +2,15 @@ import React, { useEffect } from "react";
 import { getOrderList } from "../util/api/order";
 import { useRecoilState, useRecoilValue } from "recoil";
 import { loginState } from "../atom/login";
-import { storeState } from "../atom/store";
+//import { storeState } from "../atom/store";
 import { menuState } from "../atom/menu";
 import { alertState } from "../atom/alert";
 import Swal from "sweetalert2";
 import withReactContent from "sweetalert2-react-content";
 import styled from "styled-components";
-import { Navigate } from "react-router-dom";
+import { Navigate, useNavigate } from "react-router-dom";
+import { acceptOrder, deleteOrder } from "../util/api/order";
+import useInterval from "../util/timer/timer";
 
 const StyledTable = styled.table`
   width: 100%;
@@ -26,16 +28,15 @@ const Td = styled.td`
 
 export default function OrderTable() {
   const [menu, setMenu] = useRecoilState(menuState);
-
   //const [mounted, setMounted] = useState(false); // 로딩중 상태 표현
 
   const loginInfo = useRecoilValue(loginState);
-  const storeInfo = useRecoilValue(storeState);
+  //const storeInfo = useRecoilValue(storeState);
   // 리코일 사용해서
   // 전역상태의 로그인 정보를 가져오기
 
   // 엘럿창
-  const [isAlertInitial, setAlert] = useRecoilState(alertState);
+  const [, setAlert] = useRecoilState(alertState);
   const Toast = Swal.mixin({
     toast: true,
     position: "top",
@@ -45,44 +46,37 @@ export default function OrderTable() {
   });
 
   const MySwal = withReactContent(Toast);
+  const navigate = useNavigate();
 
-  useEffect(() => {
-    async function fetch() {
-      const userInfo = localStorage.getItem("userId");
-      const storeInfo = localStorage.getItem("storeId");
-      if (userInfo && storeInfo) {
-        const response = await getOrderList(storeInfo);
-        setMenu(response.data);
-      } else {
+  useInterval(async function fetch() {
+    console.log("실행");
+    const userInfo = localStorage.getItem("userId");
+    const storeInfo = localStorage.getItem("storeId");
+    if (userInfo && storeInfo) {
+      const response = await getOrderList(storeInfo);
+      if (menu.length !== response.data.length) {
         setAlert(false);
         MySwal.fire({
-          icon: "error",
-          title: "로그인이 필요한 서비스 입니다.",
+          icon: "success",
+          title: "주문이 추가되었습니다. ",
         });
       }
+      setMenu(response.data);
     }
+  }, 1500);
 
-    fetch();
-  }, [MySwal, storeInfo, menu, isAlertInitial, setAlert, loginInfo, setMenu]);
-
-  const acceptMenu = (e) => {
-    const p = [...menu].filter((item) => item.number !== e.number);
-
-    setMenu([
-      ...p,
-      {
-        number: e.number,
-        time: e.time,
-        menus: e.menus,
-        price: e.price,
-        status: false,
-      },
-    ]);
-  };
-
-  const deleteMenu = (number) => {
-    setMenu((prev) => [...prev].filter((e) => number !== e.number));
-  };
+  useEffect(() => {
+    const userInfo = localStorage.getItem("userId");
+    const storeInfo = localStorage.getItem("storeId");
+    if (!userInfo || !storeInfo) {
+      setAlert(false);
+      MySwal.fire({
+        icon: "error",
+        title: "로그인이 필요한 서비스 입니다.",
+      });
+      navigate(`/login`);
+    }
+  }, [MySwal, navigate, setAlert]);
 
   return loginInfo ? (
     <StyledTable>
@@ -96,27 +90,30 @@ export default function OrderTable() {
         </Tr>
       </thead>
       <tbody>
-        {menu.map((item) => (
+        {[...menu].reverse().map((item) => (
           <Tr key={item.number}>
             <Td>{item.number}</Td>
             <Td>{item.time} </Td>
             <Td>{item.menus}</Td>
             <Td>{item.price} </Td>
             <Td>
-              {item.status ? (
+              {item.status !== "waiting" ? (
                 <div key={item.number}>
-                  <button className="accept" onClick={() => acceptMenu(item)}>
+                  <button
+                    className="accept"
+                    onClick={() => acceptOrder(item.number)}
+                  >
                     주문승인
                   </button>
                   <button
                     className="cancel"
-                    onClick={() => deleteMenu(item.number)}
+                    onClick={() => deleteOrder(item.number)}
                   >
                     주문거절
                   </button>
                 </div>
               ) : (
-                "완료"
+                item.status
               )}
             </Td>
           </Tr>

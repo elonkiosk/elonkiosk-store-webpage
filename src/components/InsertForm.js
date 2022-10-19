@@ -2,7 +2,7 @@ import React, { useState } from "react";
 //import { useRecoilValue } from "recoil";
 import styled from "styled-components";
 //import { loginState } from "../atom/login";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import axios from "axios";
 
 const StyledTitle = styled.h2`
@@ -123,6 +123,8 @@ export default function InsertForm() {
 
   const storeId = localStorage.getItem("storeId");
 
+  const navigate = useNavigate();
+
   const handleSubmit = (e) => {
     console.log(files);
     e.preventDefault();
@@ -130,6 +132,7 @@ export default function InsertForm() {
     const formData = new FormData();
 
     const bodyObj = {
+      store: storeId,
       name: name,
       category: category,
       price: price,
@@ -150,6 +153,7 @@ export default function InsertForm() {
     });
 
     setFiles(null);
+    navigate(`/menulist`);
   };
 
   const handleUpload = (e) => {
@@ -162,7 +166,6 @@ export default function InsertForm() {
   return (
     <StyledForm onSubmit={handleSubmit}>
       <StyledTitle>메뉴 추가하기</StyledTitle>
-      <input type="hidden" name="store" value={storeId} />
       <StyledTable>
         <tbody>
           <tr>
@@ -174,6 +177,7 @@ export default function InsertForm() {
                 type="text"
                 name="name"
                 onChange={(e) => setName(e.target.value)}
+                required
               />
             </Td>
           </tr>
@@ -231,6 +235,7 @@ export default function InsertForm() {
                 type="number"
                 name="price"
                 onChange={(e) => setPrice(e.target.value)}
+                required
               />
             </Td>
           </tr>
@@ -244,6 +249,7 @@ export default function InsertForm() {
                 type="textarea"
                 name="explanation"
                 onChange={(e) => setExplanation(e.target.value)}
+                required
               />
             </Td>
           </tr>
@@ -258,6 +264,7 @@ export default function InsertForm() {
                 accept="image/jpeg,image/jpg,image/png"
                 name="file"
                 onChange={handleUpload}
+                required
               />
             </Td>
           </tr>

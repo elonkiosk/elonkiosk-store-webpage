@@ -9,12 +9,17 @@ export const getMenuList = async (id) => {
 };
 
 // D
-export const deleteMenu = async (id, menuId) => {
-  await client.post(`/menu/...`);
+export const deleteMenu = async (menuId) => {
+  await client.delete(`/api/menu/${menuId}`);
 };
 
 // U
-// export const updateMenu = async (id, menuId, )
+export const getMenu = async (menuId) => {
+  const data = await client
+    .get(`/api/menu/${menuId}`)
+    .then((response) => response);
+  return data;
+};
 
 // C
 export const insertMenu = async (id, menu) => {

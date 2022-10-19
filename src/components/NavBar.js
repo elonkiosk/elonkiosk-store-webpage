@@ -69,6 +69,7 @@ export default function NavBar() {
   const loginInfo = localStorage.getItem("userId");
 
   const logout = () => {
+    console.log(loginInfo);
     setLoginInfo("");
     setStoreInfo("");
     localStorage.removeItem("userId");
@@ -77,11 +78,11 @@ export default function NavBar() {
 
   return (
     <NavWrapper>
-      <Logo>Elon-Kiosk for Store</Logo>
+      <Logo>QR UFO for Store</Logo>
       <Nav>
         <Ul>
           <Li className="userinfo">
-            {loginInfo ? (
+            {loginInfo !== null ? (
               <StyledLink to="/login" onClick={logout}>
                 <div>로그아웃</div>
               </StyledLink>
