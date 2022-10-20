@@ -28,7 +28,6 @@ const Td = styled.td`
 
 export default function OrderTable() {
   const [menu, setMenu] = useRecoilState(menuState);
-  //const [mounted, setMounted] = useState(false); // 로딩중 상태 표현
 
   const loginInfo = useRecoilValue(loginState);
   //const storeInfo = useRecoilValue(storeState);
@@ -62,6 +61,7 @@ export default function OrderTable() {
         });
       }
       setMenu(response.data);
+      console.dir(response.data);
     }
   }, 1500);
 
@@ -93,11 +93,16 @@ export default function OrderTable() {
         {[...menu].reverse().map((item) => (
           <Tr key={item.number}>
             <Td>{item.number}</Td>
-            <Td>{item.time} </Td>
-            <Td>{item.menus}</Td>
-            <Td>{item.price} </Td>
+            <Td>{item.time}</Td>
             <Td>
-              {item.status !== "waiting" ? (
+              {item.menus.map((m, idx) => {
+                if (idx !== item.menus.length - 1) return m.name + ", ";
+                else return m.name;
+              })}
+            </Td>
+            <Td>{item.total}원</Td>
+            <Td>
+              {item.status === "waiting" ? (
                 <div key={item.number}>
                   <button
                     className="accept"
@@ -112,8 +117,10 @@ export default function OrderTable() {
                     주문거절
                   </button>
                 </div>
+              ) : item.status === "denied" ? (
+                "주문 거절"
               ) : (
-                item.status
+                "주문 승인"
               )}
             </Td>
           </Tr>
