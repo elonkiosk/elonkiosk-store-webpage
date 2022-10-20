@@ -95,10 +95,9 @@ export default function OrderTable() {
             <Td>{item.number}</Td>
             <Td>{item.time}</Td>
             <Td>
-              {item.menus.map((m, idx) => {
-                if (idx !== item.menus.length - 1) return m.name + ", ";
-                else return m.name;
-              })}
+              {item.menus.map((m, idx) => (
+                <p key={idx}>{m.name}</p>
+              ))}
             </Td>
             <Td>{item.total}원</Td>
             <Td>
