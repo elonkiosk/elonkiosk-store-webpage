@@ -5,4 +5,4 @@
 - This repository is for Elon-Kiosk-Store UI
 
 
-### 구현 계획
+### 구현 기능
